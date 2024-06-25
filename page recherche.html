@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface Recherche</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .search-container {
+            padding: 20px;
+            text-align: center;
+        }
+        .gcse-search {
+            width: 60%;
+            margin: 0 auto;
+        }
+        .results-container {
+            padding: 20px;
+        }
+        .result-item {
+            background-color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+    <script async src="https://cse.google.com/cse.js?cx=c0c4038085d6649e6"></script>
+    <script>
+        function onGoogleSearch() {
+            const elements = document.querySelectorAll('.gsc-webResult.gsc-result');
+            const resultsContainer = document.querySelector('.results-container');
+            resultsContainer.innerHTML = '';
+
+            elements.forEach(async element => {
+                const titleElement = element.querySelector('.gs-title');
+                if (titleElement) {
+                    const title = titleElement.textContent || titleElement.innerText;
+                    const apiKey = 'AIzaSyBOsU0WzelYxieSlgQD1SvCe9GEE9Kmf_o';
+                    const placeSearchUrl = `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=${https://cse.google.com/cse?cx=c0c4038085d6649e6}&inputtype=textquery&fields=place_id&key=${AIzaSyBOsU0WzelYxieSlgQD1SvCe9GEE9Kmf_o}`;
+
+                    const placeSearchResponse = await fetch(placeSearchUrl);
+                    const placeSearchData = await placeSearchResponse.json();
+
+                    if (placeSearchData.candidates.length > 0) {
+                        const placeId = placeSearchData.candidates[0].place_id;
+                        const placeDetailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${c0c4038085d6649e6}&fields=name,business_status,formatted_phone_number,website&key=${AIzaSyBOsU0WzelYxieSlgQD1SvCe9GEE9Kmf_o}`;
+
+                        const placeDetailsResponse = await fetch(placeDetailsUrl);
+                        const placeDetailsData = await placeDetailsResponse.json();
+                        const placeDetails = placeDetailsData.result;
+
+                        const resultItem = document.createElement('div');
+                        resultItem.classList.add('result-item');
+
+                        const nameElement = document.createElement('h3');
+                        nameElement.textContent = placeDetails.name;
+                        resultItem.appendChild(nameElement);
+
+                        const statusElement = document.createElement('p');
+                        statusElement.textContent = `Statut: ${placeDetails.business_status || 'N/A'}`;
+                        resultItem.appendChild(statusElement);
+
+                        const phoneElement = document.createElement('p');
+                        phoneElement.textContent = `Téléphone: ${placeDetails.formatted_phone_number || 'N/A'}`;
+                        resultItem.appendChild(phoneElement);
+
+                        const websiteElement = document.createElement('p');
+                        if (placeDetails.website) {
+                            const websiteLink = document.createElement('a');
+                            websiteLink.href = placeDetails.website;
+                            websiteLink.textContent = placeDetails.website;
+                            websiteLink.target = '_blank';
+                            websiteElement.appendChild(websiteLink);
+                        } else {
+                            websiteElement.textContent = 'Site internet: N/A';
+                        }
+                        resultItem.appendChild(websiteElement);
+
+                        resultsContainer.appendChild(resultItem);
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.gcse-search').addEventListener('DOMSubtreeModified', onGoogleSearch);
+        });
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1>Interface Recherche</h1>
+    </div>
+    <div class="search-container">
+        <div class="gcse-search"></div>
+    </div>
+    <div class="results-container">
+        <!-- Résultats de la recherche apparaîtront ici -->
+    </div>
+    <div class="footer">
+        <p>&copy; 2024 Interface Recherche. Tous droits réservés.</p>
+    </div>
+</body>
+</html>
